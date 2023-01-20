@@ -16,60 +16,10 @@ import firestore from "../../src/firebase";
 import { async } from "@firebase/util";
 
 const Chat = (props) => {
-  const [msgName, setMsgName] = useState("");
-  const [msgSended, setMsgSended] = useState("");
   const [chatMsgList, setChatMsgList] = useState([]);
-  const [idOfTicket, setIdOfTicket] = useState("");
-
-  const handleChange = (event) => {
-    setMsgName(event.target.value);
-  };
-  
-  const sendMessage = async () => {
-    setMsgSended(msgName);
-    const messageList = chatMsgList;
-    messageList.push({
-      title: msgName,
-      avatar_image: "",
-    });
-    const obj = {
-      query_id: idOfTicket,
-      data: messageList,
-    };
-    const queryDoc = doc(firestore, "messages", idOfTicket.toString());
-    await setDoc(queryDoc, obj);
-    fetch(
-      "https://staging.jobportalapi.atwpl.com/adminportal/ticket_response/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer  ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          ticket_id: idOfTicket,
-          ticket_response: msgName,
-        }),
-      }
-    );
-    setMsgName("");
-    fetch(
-      "https://staging.jobportalapi.atwpl.com/adminportal/close_ticket/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer  ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          ticket_id: idOfTicket,
-        }),
-      }
-    );
-
-
-  };
+  const [idOfTicket, setIdOfTicket] = useState("");  
   useEffect(() => {
+    setChatMsgList(props.userDetails)
     setIdOfTicket(props.ticketId);
     getCloudMessageList();
   });
@@ -112,12 +62,12 @@ const Chat = (props) => {
           <span className="chat-user-name">{props.name} </span>
 
         </div>
-        <h3>Ticket Details</h3>
+        <h3>User Details</h3>
         <div className="send-msg-box">
                   <h3 className="sender-name">{props.subject}</h3>
                   <p className="text mt-2">{props.description}</p>
                   <p className="text mt-2">{props.time}</p>
-                  <p className="text mt-2">{props.date.slice(0, 10)}</p>
+                  <p className="text mt-2">{props.date}</p>
                 </div>
         
         <span className="chat-user-name text-dark"> </span>
@@ -126,7 +76,6 @@ const Chat = (props) => {
           <div className="chat ">
             <div className="flex-center w-100 position-relative">
               <hr className="days-update-line" />
-              <p className="msg-day">Today {props.ticketId}</p>
             </div>
             {chatMsgList.map((item) => {
               return (
@@ -135,7 +84,7 @@ const Chat = (props) => {
                   <h3 className="sender-name">You</h3>
                   <p className="text mt-2">{item.title}</p>
                 </div>
-                <img src={Avatar10} alt="" className="sender-img ml-1" />
+                {/* <img src={Avatar10} alt="" className="sender-img ml-1" /> */}
               </div>
               );
             })}
@@ -176,7 +125,7 @@ const Chat = (props) => {
               }}
               value={msgName}
             /> */}
-            <textarea id="response"  cols="50"
+            {/* <textarea id="response"  cols="50"
               name="textValue"
               style={{minHeight: "48px"}}
 
@@ -188,12 +137,12 @@ const Chat = (props) => {
               value={msgName}>
               </textarea>
             <img src="./smile-grey.png" alt="" className="left-img" />
-            <img src="./camera.png" alt="" className="right-img" />
+            <img src="./camera.png" alt="" className="right-img" /> */}
           </div>
 
-          <button className="send-btn" onClick={sendMessage}>
+          {/* <button className="send-btn" onClick={sendMessage}>
             <img src="./send-msg.png" alt="" className="send-img" />
-          </button>
+          </button> */}
         </div>
       </div>
     </>

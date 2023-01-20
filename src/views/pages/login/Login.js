@@ -36,22 +36,7 @@ const Login = () => {
     })
     .then(val=>val.json())
     .then((data)=>{
-
-        if(data?.status_code == 200){
-      
-          localStorage.setItem("token",data.data.access)
-          navigate("/dashboard");
-          setError(false);
-          
-        }
-        else{
-          setError(true);
-          console.log("incorrect");
-          // useNavigate("/login");
-        }
-      
-      console.log(usernamee)
-      console.log(userpass);
+      navigate("/dashboard");
     })
   }
   return (

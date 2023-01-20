@@ -8,7 +8,7 @@ import MessageBox from "./MessageBox";
 
 import { useLocation } from "react-router-dom";
 
-const Tickets = (props) => {
+const UserList = (props) => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [ticketId, setTicketId] = useState(0);
@@ -16,7 +16,7 @@ const Tickets = (props) => {
   //  const [data,setData]=useState();
   useEffect(() => {
     fetch(
-      "https://staging.jobportalapi.atwpl.com/adminportal/ticket_details/",
+      "http://localhost:3001/user/list/",
       {
         method: "GET",
         headers: {
@@ -26,39 +26,27 @@ const Tickets = (props) => {
       }
     )
       .then((response) => response.json())
-      .then((response) => setData(response.data))
+      .then((response) => setData(response.userList))
       .catch((err) => console.log(err));
   }, []);
 
   const columns = [
     {
-      name: "Subject",
-      selector: (row) => row.subject,
+      name: "User Name.",
+      selector: (row) => row.firstName,
     },
     {
-      name: "Raised By.",
-      selector: (row) => row.first_name,
+      name: "Created On.",
+      selector: (row) => row.createdAt.slice(0, 10),
     },
     {
-      name: "Raised On.",
-      selector: (row) => row.created_at.slice(0, 10),
+      name: "Email",
+      selector: (row) => row.email,
     },
     {
-      name: "Category",
-      selector: (row) => row.subject,
+      name: "Phone",
+      selector: (row) => row.phone,
     },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-    },
-    // {
-    //   name: "Reply",
-    //   cell: (row) => <Link to="/raised-ticket" className='btn btn-sm theme-btn'>Reply</Link>
-    // },
-    // {
-    //   name: "Mark as",
-    //   cell: (row) => <button className='btn btn-sm btn-outline-success px-3 rounded-4'>Mark as Read</button>
-    // },
     {
       name: "Action",
       width: "160px",
@@ -71,7 +59,7 @@ const Tickets = (props) => {
           {/* Link to="/raised-ticket" */}
           <button
             onClick={() => {
-              setTicketId(row.id);
+              setTicketId(row);
             }}
             id={row.id}
             className="btn btn-sm btn-outline-danger rounded-4 px-3"
@@ -91,7 +79,7 @@ const Tickets = (props) => {
     {console.log(data, "lllllll")}
       {ticketId === 0 ? (
         <div>
-          <h1 className="heading mb-3">Tickets</h1>
+          <h1 className="heading mb-3">User List</h1>
           <div className="float-end">
           <input
             type="date"
@@ -122,13 +110,13 @@ const Tickets = (props) => {
           />
         </div>
       ) : (
-        <TicketsReply chatName={data[0].first_name} description={data[0].description} subject={data[0].subject} created_at={data[0].created_at} backBtn ={()=> {setTicketId(0); console.log("backBtn Clicked");}} chatTicketId={ticketId} boxTicketId={ticketId}/>
+        <TicketsReply userDetails={data} />
       )}
     </>
   );
 };
 
-export default Tickets;
+export default UserList;
 
 const TicketsReply = (props) => {
   const location = useLocation();
